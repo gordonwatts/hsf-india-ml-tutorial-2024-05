@@ -1,5 +1,6 @@
 jax[cpu]
 optax # Optimizers for jax
+dm-haiku # NN for JAX
 jupyterlab
 matplotlib
 pandas
