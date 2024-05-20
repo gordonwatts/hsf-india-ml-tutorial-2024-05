@@ -1,6 +1,7 @@
 jax[cpu]
 optax # Optimizers for jax
 dm-haiku # NN for JAX
+tqdm # progress bar
 jupyterlab
 matplotlib
 pandas
