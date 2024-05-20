@@ -8,3 +8,4 @@ pandas
 uproot
 scikit-learn
 tensorflow
+ipywidgets
