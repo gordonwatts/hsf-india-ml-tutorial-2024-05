@@ -1,9 +1,10 @@
 # Plot score for signal and background, comparing training and testing
-import numpy as np
-import matplotlib.pyplot as plt
+from math import log, sqrt
 
-from math import sqrt
-from math import log
+import matplotlib.pyplot as plt
+import numpy as np
+import pandas
+import uproot
 
 
 def compare_train_test(
@@ -95,3 +96,35 @@ def amsasimov(s, b):  # asimov (or Poisson) significance
         print(1 + float(s) / b)
         print(2 * ((s + b) * log(1 + float(s) / b) - s))
     # return s/sqrt(s+b)
+
+
+def load_training_file() -> pandas.DataFrame:
+    """Load the ATLAS open data for the WW dataset.
+
+    * This data has already been pre-processed into a numpy-like array.
+    * It contains both signal and background events.
+
+    The data we return:
+    * Is in `pandas` format
+    * has positive-only mcWeights
+    * has at least 2 leptons.
+
+    This is typically how you will store training data. And
+    script will source the original Monte Carlo signal and
+    background, and produce a "training file".
+    """
+    # Load the data and fetch the tree.
+    filename = "dataWW_d1.root"
+    file = uproot.open(filename)
+    tree = file["tree_event"]
+
+    # Next, lets load this data we already know is rect-a-linear
+    # into a pandas array.
+    d_fall = tree.arrays(library="pd")
+
+    # Lets look only at events that have positive weights and have
+    # at least 2 leptons.
+
+    full_data = d_fall[(d_fall.lep_n == 2) & (d_fall.mcWeight > 0)]
+
+    return full_data
