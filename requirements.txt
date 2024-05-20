@@ -1,4 +1,5 @@
 jax[cpu]
+optax # Optimizers for jax
 jupyterlab
 matplotlib
 pandas
