@@ -1,6 +1,8 @@
 # Plot score for signal and background, comparing training and testing
 from math import log, sqrt
+from typing import Callable
 
+import jax
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas
@@ -128,3 +130,33 @@ def load_training_file() -> pandas.DataFrame:
     full_data = d_fall[(d_fall.lep_n == 2) & (d_fall.mcWeight > 0)]
 
     return full_data
+
+
+def update_batch(update: Callable, params, rng, opt_state, batch_size: int, x, y):
+    """Do one update, but train in batches to keep memory use low.
+
+    Args:
+        params (): The NN weights
+        rng (): Random number key
+        opt_state (): Optimizer state (for adam, etc.)
+        batch_size (): Rows in each batch
+        x (): Training Data
+        y (): Training Target
+    """
+
+    # Get the number of data points
+    num_data = x.shape[0]
+
+    # Calculate the number of batches per epoch
+    num_batches = num_data // batch_size
+
+    # Batch training loop
+    for batch_idx in range(num_batches):
+        # Get the batch data
+        batch_start = batch_idx * batch_size
+        batch_end = (batch_idx + 1) * batch_size
+        X_batch = x[batch_start:batch_end]
+        y_batch = y[batch_start:batch_end]
+
+        # Compute the loss and gradients
+        params, opt_state = update(params, rng, opt_state, X_batch, y_batch)
