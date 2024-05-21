@@ -120,7 +120,7 @@ def load_training_file() -> pandas.DataFrame:
 
     # Next, lets load this data we already know is rect-a-linear
     # into a pandas array.
-    d_fall = tree.arrays(library="pd")
+    d_fall = tree.arrays(library="pd")  # type: ignore
 
     # Lets look only at events that have positive weights and have
     # at least 2 leptons.
