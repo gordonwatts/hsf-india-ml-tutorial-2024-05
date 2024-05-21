@@ -2,7 +2,6 @@
 from math import log, sqrt
 from typing import Callable
 
-import jax
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas
