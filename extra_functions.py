@@ -1,6 +1,7 @@
 # Plot score for signal and background, comparing training and testing
 from math import log, sqrt
-from typing import Callable
+from pathlib import Path
+from typing import Callable, Optional
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -99,7 +100,7 @@ def amsasimov(s, b):  # asimov (or Poisson) significance
     # return s/sqrt(s+b)
 
 
-def load_training_file() -> pandas.DataFrame:
+def load_training_file(filename: Optional[Path] = None) -> pandas.DataFrame:
     """Load the ATLAS open data for the WW dataset.
 
     * This data has already been pre-processed into a numpy-like array.
@@ -115,9 +116,10 @@ def load_training_file() -> pandas.DataFrame:
     background, and produce a "training file".
     """
     # Load the data and fetch the tree.
-    filename = "dataWW_d1.root"
+    if filename is None:
+        filename = Path("dataWW_d1.root")
     file = uproot.open(filename)
-    tree = file["tree_event"]
+    tree = file[file.keys()[0]]
 
     # Next, lets load this data we already know is rect-a-linear
     # into a pandas array.
